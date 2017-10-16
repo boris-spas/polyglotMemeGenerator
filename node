@@ -1,0 +1,2 @@
+#!/bin/bash
+exec "/home/osboxes/Desktop/memgen/graalvm-0.28.2-linux-amd64-jdk8/graalvm-0.28.2/bin/node" "$@"
