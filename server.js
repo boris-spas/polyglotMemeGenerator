@@ -1,8 +1,9 @@
-var	http = require("http");
+const express = require("express");
+const bodyParser = require("body-parser");
+const app = express();
 
-var server = http.createServer(function(req, res) {
-  res.writeHead(200);
-  res.end('Hello Http');
+const port = 3300;
+
+app.listen(port, function (argument) {
+	console.log("Hey! Port " + port);
 });
-
-server.listen(3300);
