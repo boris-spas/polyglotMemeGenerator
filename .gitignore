@@ -1,0 +1,4 @@
+scripts/*
+Images/*
+node_modules/*
+*.class
