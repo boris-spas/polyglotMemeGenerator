@@ -1,10 +1,19 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const multer = require("multer");
+const fs = require('fs');
 
 const app = express();
 
 const port = 3300;
+
+
+fs.readFile('process_image.rb', 'utf8', function(err, contents) {
+	var rubyTestCode = contents;
+    Interop.eval("application/x-ruby", rubyTestCode);
+	const rubyTest = Interop.import("test");
+	Interop.execute(rubyTest);
+});
 
 app.use(bodyParser.json());
 
