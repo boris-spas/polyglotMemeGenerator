@@ -7,12 +7,47 @@ const app = express();
 
 const port = 3300;
 
+var makeMeme;
+var lastName;
+var resFile;
+
+function loadMeme(response) {
+	resFile = makeMeme(lastName, "Your face when", "you working with js");
+	var extension = resFile.split(".").pop();
+	var contentType = "text/html";
+	switch (extension) {
+        case 'png':
+        	contentType = 'image/png';
+        	break;      
+    	case 'jpg':
+        	contentType = 'image/jpg';
+        	break;
+	}
+	fs.readFile(filePath, function(error, content) {
+        if (error) {
+            if(error.code == 'ENOENT'){
+                fs.readFile('./404.html', function(error, content) {
+                    response.writeHead(200, { 'Content-Type': contentType });
+                    response.end(content, 'utf-8');
+                });
+            }
+            else {
+                response.writeHead(500);
+                response.write(error.code + "..\n");
+            }
+        }
+        else {
+            response.writeHead(200, { 'Content-Type': contentType });
+            response.write(content, 'utf-8');
+        }
+    });
+};
 
 fs.readFile('process_image.rb', 'utf8', function(err, contents) {
-	var rubyTestCode = contents;
-    Interop.eval("application/x-ruby", rubyTestCode);
-	const rubyTest = Interop.import("test");
-	Interop.execute(rubyTest);
+	var rubyMemeGen = contents;
+    Interop.eval("application/x-ruby", rubyMemeGen);
+	makeMeme = Interop.import("generateMeme");
+	console.log("Ruby code is loaded!");
 });
 
 app.use(bodyParser.json());
@@ -22,7 +57,8 @@ var Storage = multer.diskStorage({
         callback(null, "./Images");
     },
     filename: function (req, file, callback) {
-        callback(null, file.fieldname + "_" + Date.now() + "_" + file.originalname);
+    	lastName = file.fieldname + "_" + Date.now() + "_" + file.originalname;
+        callback(null, fname);
     }
 });
 
@@ -37,6 +73,7 @@ app.post("/api/Upload", function (req, res) {
         if (err) { 
             return res.end("Something went wrong!"); 
         } 
+        loadMeme(res);
         return res.end("File successfully uploaded!"); 
     }); 
 }); 
