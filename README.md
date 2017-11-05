@@ -15,6 +15,7 @@ $ cd polyglotMemeGenerator
 $ npm install express
 $ npm install body-parser
 $ npm install multer
+$ mkdir Images
 ```
 Development:
 [x] Basic image upload server
