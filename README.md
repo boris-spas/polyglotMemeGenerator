@@ -15,10 +15,10 @@ $ cd polyglotMemeGenerator
 $ npm install express
 $ npm install body-parser
 $ npm install multer
+$ ruby -Sgem install mini_magick
 $ mkdir Images
 ```
 Development:
-[x] Basic image upload server
-[x] Frontend page
-[ ] Image processing with Ruby
-[ ] Store images in a database
+* Basic image upload server
+* Frontend page
+* Image processing with Ruby

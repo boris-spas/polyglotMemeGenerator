@@ -1,7 +1,7 @@
 require "mini_magick"
 
 def generateMeme(filename, top_caption, bot_caption)
-	img = MiniMagick::Image.open("../diagram.png")
+	img = MiniMagick::Image.open(filename)
 		img.combine_options do |c|
 		c.gravity "south"
 		c.draw "text 0,0 'Wololo'"
