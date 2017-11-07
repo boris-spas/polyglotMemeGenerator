@@ -33,7 +33,7 @@ function loadMeme(response) {
             }
             else {
                 response.writeHead(500);
-                response.write(error.code + "..\n");
+                response.end(error.code + "..\n");
             }
         }
         else {
@@ -45,7 +45,7 @@ function loadMeme(response) {
 
 fs.readFile('process_image.rb', 'utf8', function(err, contents) {
 	var rubyMemeGen = contents;
-    Interop.eval("application/x-ruby", rubyMemeGen);
+    Interop.eval("application/x-ruby", rubyMemeGen;
 	makeMeme = Interop.import("generateMeme");
 	console.log("Ruby code is loaded!");
 });
@@ -58,7 +58,7 @@ var Storage = multer.diskStorage({
     },
     filename: function (req, file, callback) {
     	lastName = file.fieldname + "_" + Date.now() + "_" + file.originalname;
-        callback(null, fname);
+        callback(null, lastName);
     }
 });
 
