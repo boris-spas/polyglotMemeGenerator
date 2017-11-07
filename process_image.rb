@@ -9,6 +9,7 @@ def generateMeme(filename, top_caption, bot_caption)
 		c.draw "text 0,0 '" + top_caption + "'"
  		c.pointsize 40
 		c.stroke("black")
+		c.strokewidth 1
 		c.font "./fonts/Impact.ttf"
 		c.weight "bold"
 		c.fill("white")
@@ -21,4 +22,4 @@ end
 Truffle::Interop.export_method(:test)
 
 
-# generateMeme("../diagram.png", "wow, so diagram", "very graphic")
+generateMeme("../diagram.png", "wow, so diagram", "very graphic")
