@@ -15,11 +15,12 @@ def generateMeme(filename, top_caption, bot_caption)
 		c.fill("white")
 	end
 	meme_file = File.join(File.dirname(filename), "MEMEGEN" + File.basename(filename))
+	print(meme_file)
 	img.write(meme_file)
 	meme_file
 end
 
-Truffle::Interop.export_method(:test)
+Truffle::Interop.export_method(:generateMeme)
 
 
-generateMeme("../diagram.png", "wow, so diagram", "very graphic")
+# generateMeme("../diagram.png", "wow, so diagram", "very graphic")

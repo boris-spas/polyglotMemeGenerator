@@ -26,7 +26,8 @@
   
         // post-submit callback 
         function showResponse(responseText, statusText, xhr, $form) { 
-            alert('status: ' + statusText + '\n\nresponseText: \n' + responseText ); 
+            alert('status: ' + statusText + '\n\nresponseText: \n' + responseText );
+            document.getElementById("image").src = "http://localhost:3300/" + responseText; 
         } 
     </script> 
 </head>
