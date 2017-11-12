@@ -10,12 +10,11 @@ def generateMeme(filename, top_caption, bot_caption)
  		c.pointsize 40
 		c.stroke("black")
 		c.strokewidth 1
-		c.font "./fonts/Impact.ttf"
+		c.font File.dirname(__FILE__) + "/fonts/Impact.ttf"
 		c.weight "bold"
 		c.fill("white")
 	end
-	meme_file = File.join(File.dirname(filename), "MEMEGEN" + File.basename(filename))
-	print(meme_file)
+	meme_file = File.join(File.dirname(filename), "MEMEGEN_" + File.basename(filename))
 	img.write(meme_file)
 	meme_file
 end
@@ -23,4 +22,4 @@ end
 Truffle::Interop.export_method(:generateMeme)
 
 
-# generateMeme("../diagram.png", "wow, so diagram", "very graphic")
+generateMeme(File.dirname(__FILE__) + "/testbench/test.jpeg", "Wow, so ruby\nMuch js", "Very polyglot")
