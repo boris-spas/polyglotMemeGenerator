@@ -14,12 +14,12 @@ def generateMeme(filename, top_caption, bot_caption)
 		c.weight "bold"
 		c.fill("white")
 	end
-	meme_file = File.join(File.dirname(filename), "MEMEGEN_" + File.basename(filename))
+	meme_file = File.join(File.dirname(filename), "MEMEGEN_" + File.basename(filename)).to_str
 	img.write(meme_file)
-	meme_file
+	return meme_file
 end
 
 Truffle::Interop.export_method(:generateMeme)
 
 
-# generateMeme(File.dirname(__FILE__) + "/testbench/test.jpeg", "Wow, so ruby\nMuch js", "Very polyglot")
+# generateMeme(File.dirname(__FILE__) + "/test.jpeg", "Wow, so ruby\nMuch js", "Very polyglot")

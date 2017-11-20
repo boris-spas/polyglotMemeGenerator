@@ -11,37 +11,45 @@ var makeMeme;
 var lastName;
 var resFile;
 
+var upload = multer({ dest: '/Images' });
+
 function loadMeme(response) {
-	resFile = makeMeme(lastName, "Your face when", "you working with js");
-	response.end(resFile);
-	// var extension = resFile.split(".").pop();
-	// var contentType = "text/html";
-	// switch (extension) {
- //        case 'png':
- //        	contentType = 'image/png';
- //        	break;      
- //    	case 'jpg':
- //        	contentType = 'image/jpg';
- //        	break;
-	// }
-	// fs.readFile(filePath, function(error, content) {
- //        if (error) {
- //            if(error.code == 'ENOENT'){
- //                fs.readFile('./404.html', function(error, content) {
- //                    response.writeHead(200, { 'Content-Type': contentType });
- //                    response.end(content, 'utf-8');
- //                });
- //            }
- //            else {
- //                response.writeHead(500);
- //                response.end(error.code + "..\n");
- //            }
- //        }
- //        else {
- //            response.writeHead(200, { 'Content-Type': contentType });
- //            response.write(content, 'binary');
- //        }
- //    });
+	resFile = makeMeme("Images/" + lastName, "Your face when", "you working with js");
+	// response.end(resFile);
+	var extension = resFile.split(".").pop();
+	var contentType = "text/html";
+	switch (extension) {
+        case 'png':
+        	contentType = 'image/png';
+        	break;      
+    	case 'jpg':
+        	contentType = 'image/jpg';
+        	break;
+	}
+
+	fs.readFile(resFile, function(error, content) {
+        if (error) {
+            if(error.code == 'ENOENT'){
+                fs.readFile('./404.html', function(error, content) {
+                    response.writeHead(200, { 'Content-Type': contentType });
+                    response.end(content, 'utf-8');
+                });
+            }
+            else {
+                response.writeHead(500);
+                response.end(error.code + "..\n");
+            }
+        }
+        else {
+            response.writeHead(200, { 'Content-Type': contentType });
+            response.render('image', {
+      			path: resFile
+      		});
+      		response.end()
+            // response.end(content, 'binary');
+        }
+    });
+    return response
 };
 
 fs.readFile('process_image.rb', 'utf8', function(err, contents) {
@@ -69,13 +77,13 @@ app.get("/", function (req, res) {
     res.sendFile(__dirname + "/index.html"); 
 }); 
   
-app.post("/api/Upload", function (req, res) { 
+app.post("/api/Upload", upload.single("file"), function (req, res) { 
     upload(req, res, function (err) { 
         if (err) { 
             return res.end("Something went wrong!"); 
         } 
-        loadMeme(res);
-        return res.end("File successfully uploaded!"); 
+        // return res.end("File successfully uploaded!"); 
+        return loadMeme(res);
     }); 
 }); 
 
