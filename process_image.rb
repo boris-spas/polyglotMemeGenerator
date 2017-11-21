@@ -9,7 +9,7 @@ def generateMeme(filename, top_caption, bot_caption)
 		c.draw "text 0,0 '" + top_caption + "'"
  		c.pointsize 50
 		c.stroke("black")
-		c.strokewidth 1
+		c.strokewidth 2
 		c.font File.dirname(__FILE__) + "/fonts/Impact.ttf"
 		c.weight "bold"
 		c.fill("white")
@@ -22,4 +22,4 @@ end
 Truffle::Interop.export_method(:generateMeme)
 
 
-# generateMeme(File.dirname(__FILE__) + "/test.jpeg", "Wow, so ruby\nMuch js", "Very polyglot")
+generateMeme(File.dirname(__FILE__) + "/testbench/test.jpeg", "Wow, so ruby\nMuch js", "Very polyglot")
