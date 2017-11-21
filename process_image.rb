@@ -7,7 +7,7 @@ def generateMeme(filename, top_caption, bot_caption)
 		c.draw "text 0,0 '" + bot_caption + "'"
 		c.gravity "north"
 		c.draw "text 0,0 '" + top_caption + "'"
- 		c.pointsize 40
+ 		c.pointsize 50
 		c.stroke("black")
 		c.strokewidth 1
 		c.font File.dirname(__FILE__) + "/fonts/Impact.ttf"

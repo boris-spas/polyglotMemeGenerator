@@ -33,7 +33,9 @@
 </head>
 <body>
 <form id="frmUploader" enctype="multipart/form-data" action="api/Upload/" method="post"> 
-        <input type="file" name="imgUploader" multiple /> 
+        <input type="file" name="imgUploader" multiple required /> <br>
+        <input type="text" name="topCaption" autocomplete="off" placeholder="Top Caption" /> <br>
+        <input type="text" name="botCaption" autocomplete="off" placeholder="Bottom Caption"/> <br>
         <input type="submit" name="submit" id="btnSubmit" value="Upload" /> 
 </form> 
 <img class="meme" id="image">
