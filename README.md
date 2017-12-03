@@ -18,7 +18,10 @@ $ npm install multer
 $ ruby -Sgem install mini_magick
 $ mkdir Images
 ```
+
+File images.db (SQLite database file) must be in the same folder as the server. 
+
 Development:
 * Basic image upload server
-* Frontend page
+* Basic frontend page
 * Image processing with Ruby
