@@ -7,8 +7,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import org.sqlite.JDBC;
 import java.util.HashMap;
+import java.io.InputStream;
+import java.io.IOException;
 
-//import org.graalvm.polyglot.*;
+
+import org.graalvm.polyglot.*;
 
 
 public class DBManager {
@@ -16,17 +19,15 @@ public class DBManager {
 	private final static String ID_COL = "id";
 	private final static String IMG_COL = "image";
 	private final static String TABLE_TITLE = "templateImages";
+	private final static int    BLOB_SIZE = 1024 * 1024;
 
 	public static Connection conn;
 	public static Statement statement;
 	public static ResultSet resSet;
 
-	public DBManager(String filename) {
-		conn = null;
-		init(filename);
-	}
+	private static DBManager instance = new DBManager();
 
-	public DBManager() {
+	private DBManager() {
 		conn = null;
 		String filename = "images.db";
 		init(filename);
@@ -48,7 +49,7 @@ public class DBManager {
 		assert conn != null;
 		try {
 			statement = conn.createStatement();
-			statement.execute(String.format("CREATE TABLE if not exists '%s' ('%s' INTEGER PRIMARY KEY AUTOINCREMENT, '%s' text not null);",
+			statement.execute(String.format("CREATE TABLE if not exists '%s' ('%s' INTEGER PRIMARY KEY AUTOINCREMENT, '%s' blob not null);",
 											TABLE_TITLE, ID_COL, IMG_COL));
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -67,51 +68,62 @@ public class DBManager {
 		}
 	}
 
-	public synchronized void insertImage(String base64String) {
+	public synchronized void insertImage(byte[] image) {
 		assert (conn != null) && (statement != null);
 		try {
-			statement.execute(String.format("INSERT INTO '%s' ('%s') VALUES ('%s');", TABLE_TITLE, IMG_COL, base64String));
+			statement.execute(String.format("INSERT INTO '%s' ('%s') VALUES ('%s');", TABLE_TITLE, IMG_COL, image));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public String getImagebyId(int id) {
+	public HashMap<Integer, byte[]> getImagebyId(int id) {
 		assert (conn != null) && (statement != null);
-		String resultJSON = "{%d:%s}";
+		HashMap<Integer, byte[]> result = new HashMap<>();
 		try {
 			resSet = statement.executeQuery(String.format("SELECT * FROM %s WHERE %s = %d;", TABLE_TITLE, ID_COL, id));
 			while(resSet.next())
 			{
-				int id_val = resSet.getInt(ID_COL);
-				String image = resSet.getString(IMG_COL);
-				resultJSON = String.format(resultJSON, id_val, image);
+				InputStream input = resSet.getBinaryStream(IMG_COL);
+				byte[] imgBytes = new byte[BLOB_SIZE];
+				input.read(imgBytes);
+				int idVal = resSet.getInt(ID_COL);
+				result.put(idVal, imgBytes);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
 		}
-		return resultJSON;
+		return result;
 	}
 
 	// To test exception passing to js
-	public String getNImages(int n) throws SQLException {
+	public HashMap<Integer, byte[]> getNImages(int n) throws SQLException {
 		assert (conn != null) && (statement != null) && (n > 0);
 		resSet = statement.executeQuery(String.format("SELECT * FROM %s LIMIT %d;", TABLE_TITLE, ID_COL, n));
-		String resultJSON = "{images:[";
+		HashMap<Integer, byte[]> result = new HashMap<>();
 		while(resSet.next())
 		{
-			String imageJSON = "{%d:%s}";
 			int id = resSet.getInt(ID_COL);
-			String image = resSet.getString(IMG_COL);
-			imageJSON = String.format(imageJSON, id, image);
-			resultJSON += imageJSON + ",";
+			InputStream input = resSet.getBinaryStream(IMG_COL);
+			byte[] imgBytes = new byte[BLOB_SIZE];
+			result.put(id, imgBytes);
 		}
-		resultJSON = resultJSON.substring(0, resultJSON.length() - 1) + "]}";
-		return resultJSON;
+		return result;
+	}
+
+	public static DBManager getInstance() {
+		return instance;
+	}
+
+	public void greetings(String name) {
+		System.out.println("Hi, " + name);
 	}
 
 	public static void main(String[] args) {
-		new DBManager();
+		Context context = Context.create();
+		context.exportSymbol("DBManager", new DBManager());
 	}
 
 }
