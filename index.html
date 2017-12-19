@@ -4,7 +4,20 @@
 	<meta charset="UTF-8">
 	<title>Meme generator</title>
 	<script> 
+
+		alert("starting loading");
+    	$.get("/binimg", function(data, status, xhr) {
+    		alert("success");
+    		for (var key in data) {
+    			var img = document.createElement('img');
+				img.src = 'data:image/jpeg;base64,' + btoa(data[key]);
+				$("img_span").appendChild(img);
+    		}
+    	});
+
         $(document).ready(function () { 
+
+
             var options = { 
                 beforeSubmit: showRequest,  // pre-submit callback 
                 success: showResponse  // post-submit callback 
@@ -26,7 +39,7 @@
   
         // post-submit callback 
         function showResponse(responseText, statusText, xhr, $form) { 
-            alert('status: ' + statusText + '\n\nresponseText: \n' + responseText );
+            // alert('status: ' + statusText + '\n\nresponseText: \n' + responseText );
             document.getElementById("image").src = "http://localhost:3300/" + responseText; 
         } 
     </script> 
@@ -38,5 +51,7 @@
         <input type="text" name="botCaption" autocomplete="off" placeholder="Bottom Caption"/> <br>
         <input type="submit" name="submit" id="btnSubmit" value="Upload" /> 
 </form> 
-<img class="meme" id="image">
+<span id="img_span">
+	
+</span>>
 </html>
