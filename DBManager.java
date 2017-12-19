@@ -9,6 +9,7 @@ import org.sqlite.JDBC;
 import java.util.HashMap;
 import java.io.InputStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 
 import org.graalvm.polyglot.*;
@@ -68,18 +69,19 @@ public class DBManager {
 		}
 	}
 
-	public synchronized void insertImage(byte[] image) {
+	public synchronized void insertImage(String image) {
 		assert (conn != null) && (statement != null);
+		byte[] img_bytes = image.getBytes(Charset.forName("UTF-8"));
 		try {
-			statement.execute(String.format("INSERT INTO '%s' ('%s') VALUES ('%s');", TABLE_TITLE, IMG_COL, image));
+			statement.execute(String.format("INSERT INTO '%s' ('%s') VALUES ('%s');", TABLE_TITLE, IMG_COL, img_bytes));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public HashMap<Integer, byte[]> getImagebyId(int id) {
+	public HashMap<Integer, String> getImagebyId(int id) {
 		assert (conn != null) && (statement != null);
-		HashMap<Integer, byte[]> result = new HashMap<>();
+		HashMap<Integer, String> result = new HashMap<>();
 		try {
 			resSet = statement.executeQuery(String.format("SELECT * FROM %s WHERE %s = %d;", TABLE_TITLE, ID_COL, id));
 			while(resSet.next())
@@ -88,7 +90,7 @@ public class DBManager {
 				byte[] imgBytes = new byte[BLOB_SIZE];
 				input.read(imgBytes);
 				int idVal = resSet.getInt(ID_COL);
-				result.put(idVal, imgBytes);
+				result.put(idVal, new String(imgBytes, "UTF-8"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -98,17 +100,21 @@ public class DBManager {
 		return result;
 	}
 
-	// To test exception passing to js
-	public HashMap<Integer, byte[]> getNImages(int n) throws SQLException {
+	// To test, exceptions are passed to js
+	public HashMap<Integer, String> getNImages(int n) throws SQLException, {
 		assert (conn != null) && (statement != null) && (n > 0);
 		resSet = statement.executeQuery(String.format("SELECT * FROM %s LIMIT %d;", TABLE_TITLE, ID_COL, n));
-		HashMap<Integer, byte[]> result = new HashMap<>();
+		HashMap<Integer, String> result = new HashMap<>();
 		while(resSet.next())
 		{
 			int id = resSet.getInt(ID_COL);
 			InputStream input = resSet.getBinaryStream(IMG_COL);
 			byte[] imgBytes = new byte[BLOB_SIZE];
-			result.put(id, imgBytes);
+			try {
+				result.put(id, new String(imgBytes, "UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
 		}
 		return result;
 	}
@@ -119,6 +125,10 @@ public class DBManager {
 
 	public void greetings(String name) {
 		System.out.println("Hi, " + name);
+	}
+
+	public byte[] testByteArray(String s) {
+		return s.getBytes(Charset.forName("UTF-8"));
 	}
 
 	public static void main(String[] args) {
