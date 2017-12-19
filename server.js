@@ -7,17 +7,12 @@ const app = express();
 
 const port = 3300;
 
+// Ruby image processing
 var makeMeme;
 var lastName;
 var resFile;
-
-// function loadMeme(response) {
-// 	resFile = makeMeme("./Images/" + lastName, "Your face when", "you are working with js");
-// 	// response.writeHeader("200")
-// 	response.sendFile(__dirname + "/" + resFile);
-// 	response.end()
-//     return response
-// };
+// Java DBManager
+var dbm = Java.type('DBManager').getInstance();
 
 fs.readFile('process_image.rb', 'utf8', function(err, contents) {
 	var rubyMemeGen = contents;
@@ -45,16 +40,28 @@ var upload = multer({
 
 
 app.get("/", function (req, res) { 
+	
+	for (var i of dbm.testByteArray("hohoho")) {
+		console.log(i);
+	}
+	// var imagesHashMap = dbm.getNImages(3);
+	// console.log("From DB:" + imagesHashMap);
     res.sendFile(__dirname + "/index.html"); 
 }); 
+
+app.get("/binimg", function(req, res) {
+	var imagesHashMap = dbm.getNImages(3);
+	// console.log("From DB:" + imagesHashMap);
+	res.writeHead(200, {'Content-Type': 'text/plain'});
+});
   
 app.post("/api/Upload", upload.single("imgUploader"), function (req, res) { 
-    topCaption = req.body["topCaption"];
+	topCaption = req.body["topCaption"];
     botCaption = req.body["botCaption"];
     resFile = makeMeme("./Images/" + lastName, topCaption, botCaption);
     res.sendFile(__dirname + "/" + resFile);
 });
 
 app.listen(3300, function (a) { 
-    console.log("Listening to port 3300"); 
+	console.log("Listening to port 3300"); 
 }); 
