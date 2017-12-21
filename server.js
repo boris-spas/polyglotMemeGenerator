@@ -34,34 +34,34 @@ var Storage = multer.diskStorage({
 });
 
 var upload = multer({
-	dest: 'Images/', 
+	dest: 'Images/',
 	storage: Storage
 });
 
 
-app.get("/", function (req, res) { 
-	
+app.get("/", function (req, res) {
+
 	for (var i of dbm.testByteArray("hohoho")) {
 		console.log(i);
 	}
 	// var imagesHashMap = dbm.getNImages(3);
 	// console.log("From DB:" + imagesHashMap);
-    res.sendFile(__dirname + "/index.html"); 
-}); 
+    res.sendFile(__dirname + "/index.html");
+});
 
 app.get("/binimg", function(req, res) {
 	var imagesHashMap = dbm.getNImages(3);
 	// console.log("From DB:" + imagesHashMap);
 	res.writeHead(200, {'Content-Type': 'text/plain'});
 });
-  
-app.post("/api/Upload", upload.single("imgUploader"), function (req, res) { 
+
+app.post("/api/Upload", upload.single("imgUploader"), function (req, res) {
 	topCaption = req.body["topCaption"];
     botCaption = req.body["botCaption"];
     resFile = makeMeme("./Images/" + lastName, topCaption, botCaption);
     res.sendFile(__dirname + "/" + resFile);
 });
 
-app.listen(3300, function (a) { 
-	console.log("Listening to port 3300"); 
-}); 
+app.listen(3300, function (a) {
+	console.log("Listening to port 3300");
+});
