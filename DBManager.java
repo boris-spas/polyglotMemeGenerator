@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.io.InputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.io.UnsupportedEncodingException;
 
 
 import org.graalvm.polyglot.*;
@@ -101,7 +102,7 @@ public class DBManager {
 	}
 
 	// To test, exceptions are passed to js
-	public HashMap<Integer, String> getNImages(int n) throws SQLException, {
+	public HashMap<Integer, String> getNImages(int n) throws SQLException {
 		assert (conn != null) && (statement != null) && (n > 0);
 		resSet = statement.executeQuery(String.format("SELECT * FROM %s LIMIT %d;", TABLE_TITLE, ID_COL, n));
 		HashMap<Integer, String> result = new HashMap<>();
