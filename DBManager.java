@@ -104,7 +104,7 @@ public class DBManager {
 	// To test, exceptions are passed to js
 	public HashMap<Integer, String> getNImages(int n) throws SQLException {
 		assert (conn != null) && (statement != null) && (n > 0);
-		resSet = statement.executeQuery(String.format("SELECT * FROM %s LIMIT %d;", TABLE_TITLE, ID_COL, n));
+		resSet = statement.executeQuery(String.format("SELECT * FROM %s LIMIT %d;", TABLE_TITLE, n));
 		HashMap<Integer, String> result = new HashMap<>();
 		while(resSet.next())
 		{
@@ -138,3 +138,4 @@ public class DBManager {
 	}
 
 }
+

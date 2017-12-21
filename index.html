@@ -4,10 +4,7 @@
 	<meta charset="UTF-8">
 	<title>Meme generator</title>
 	<script>
-
-		alert("starting loading");
     	$.get("/binimg", function(data, status, xhr) {
-    		alert("success");
     		for (var key in data) {
     			var img = document.createElement('img');
 				img.src = 'data:image/jpeg;base64,' + btoa(data[key]);
@@ -16,8 +13,6 @@
     	});
 
         $(document).ready(function () {
-
-
             var options = {
                 beforeSubmit: showRequest,  // pre-submit callback
                 success: showResponse  // post-submit callback
@@ -33,13 +28,11 @@
 
         // pre-submit callback
         function showRequest(formData, jqForm, options) {
-            alert('Uploading is starting.');
             return true;
         }
 
         // post-submit callback
         function showResponse(responseText, statusText, xhr, $form) {
-            // alert('status: ' + statusText + '\n\nresponseText: \n' + responseText );
             document.getElementById("image").src = "http://localhost:3300/" + responseText;
         }
     </script>
@@ -53,5 +46,5 @@
 </form>
 <span id="img_span">
 
-</span>>
+</span>
 </html>

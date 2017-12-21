@@ -22,4 +22,4 @@ end
 Truffle::Interop.export_method(:generateMeme)
 
 
-generateMeme(File.dirname(__FILE__) + "/testbench/test.jpeg", "Wow, so ruby\nMuch js", "Very polyglot")
+# generateMeme(File.dirname(__FILE__) + "/testbench/test.jpeg", "Wow, so ruby\nMuch js", "Very polyglot")
